@@ -10,10 +10,6 @@ module class_blackHole
 contains
     subroutine show_consts(bh)
         type ( blackHole ), intent(in) :: bh
-        print*, "c = ", c
-        print*, "G = ", G
-        print*, "G/c2 = ", G/c**2
-        print*, "f= ", f(1.4,bh)
         call test(bh)
     end subroutine show_consts
 
@@ -41,17 +37,32 @@ contains
         integer :: limLoop
         if (bh%alpha > 0) then
             x_inicial = 0.00004
-            eps = 0.0001
-            epsF = 0.0001
+            eps = 0.00000000000000001
+            epsF = 0.00000000000000000000000000000000000001
             limLoop = 15
             x = solveF (x_inicial, bh, eps, epsF, limLoop)
         elseif (bh%alpha < 0) then
             x_inicial = 26
-            eps = 0.0001
-            epsF = 0.0001
+            eps = 1e-15
+            epsF = 1e-15
             limLoop = 15
             x = solveF (x_inicial, bh, eps, epsF, limLoop)
         endif
     end function horizonte_hairy_x
+
+    function horizonte_hairy(bh) result(r)
+        implicit none
+        type ( blackHole ), intent(in) :: bh
+        real :: xHorizon, r
+        xHorizon = horizonte_hairy_x(bh)
+        r = omega(xHorizon, bh)**0.5
+    end function horizonte_hairy
+
+    function horizonte(bh) result(rSchwarzschild)
+        implicit none
+        type ( blackHole ), intent(in) :: bh
+        real :: rSchwarzschild
+        rSchwarzschild = 2*G*masa(bh)/c**2
+    end function horizonte
 
 end module
