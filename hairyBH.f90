@@ -1,5 +1,6 @@
 module class_blackHole
     use class_funciones
+    use NewtonRaphson
     implicit none
     real, parameter, private :: c = 6.407e4
     real, parameter, private :: G = 39.309
@@ -32,10 +33,25 @@ contains
         endif
     end function masa
 
-    ! function horizonte_hairy_x (bh) result (x)
-    !     !Ubicacion del horizonte pero en coordenadas hairy
-    !     implicit none
-    !     type ( blackHole ), intent(in) :: bh
-    ! end function horizonte_hairy_x
+    function horizonte_hairy_x (bh) result (x)
+        !Ubicacion del horizonte pero en coordenadas hairy
+        implicit none
+        type ( blackHole ), intent(in) :: bh
+        real :: x_inicial, epsF, eps, x
+        integer :: limLoop
+        if (bh%alpha > 0) then
+            x_inicial = 0.00004
+            eps = 0.0001
+            epsF = 0.0001
+            limLoop = 15
+            x = solveF (x_inicial, bh, eps, epsF, limLoop)
+        elseif (bh%alpha < 0) then
+            x_inicial = 26
+            eps = 0.0001
+            epsF = 0.0001
+            limLoop = 15
+            x = solveF (x_inicial, bh, eps, epsF, limLoop)
+        endif
+    end function horizonte_hairy_x
 
 end module

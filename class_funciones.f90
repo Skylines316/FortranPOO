@@ -16,6 +16,8 @@ contains
         implicit none
         type ( blackHole ), intent(in) :: bh
         real :: x, nu, eta, O
+        nu = bh%nu
+        eta = bh%eta
         O = nu ** 2 * x ** (nu - 1) / eta ** 2 / (x ** nu - 1) ** 2
     end function omega
 
@@ -30,9 +32,12 @@ contains
         fun =x/O + alpha * (1 / (nu ** 2 - 4) - x ** 2 * (1 + x ** (-nu) / (nu - 2) - x ** nu / (nu + 2)) / nu ** 2)
     end function f
 
-    function diff_omega(x, nu, eta) result (dO)
+    function diff_omega(x, bh) result (dO)
         implicit none
+        type ( blackHole ), intent(in) :: bh
         real :: x, nu, eta, dO
+        nu = bh%nu
+        eta = bh%eta
         dO = -x**(nu-2)*nu**2*(nu-1+x**nu*(1+nu))/((x**nu-1)**3*eta**2)
     end function diff_omega
 

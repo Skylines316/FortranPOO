@@ -2,7 +2,7 @@ module NewtonRaphson
 use class_funciones
 
 contains
-    function solveF(xIni, bh) result(xFin)
+    function solveF(xIni, bh, eps, epsF, limLoop) result(xFin)
         implicit none
         type ( blackHole ), intent(in) :: bh
         real :: xIni, xFin, eps, epsF, error
