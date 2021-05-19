@@ -10,7 +10,7 @@ contains
         character(20) :: filename
         type ( blackHole ), intent(in) :: bh
         type ( timeLike ), intent(in) :: tl
-        write(filename,'(a,F4.2,a)') 'E=',tl%energia, '.dat'
+        write(filename,'(a,a)') './data/datos','.dat'
         open(1,file=filename)
         step=0.00001
         if (bh%alpha < 0) then
@@ -21,6 +21,8 @@ contains
                 write(1,*)
                 i=i+step
             enddo
+            close(1)
+            call system ('gnuplot -p data.plt')
         elseif (bh%alpha > 0) then
             do while(i < 1)
                 U = U_potencial(i,bh,tl)
@@ -28,6 +30,8 @@ contains
                 write(1,*) r,U
                 i=i+step
             enddo
+            close(1)
+            call system ('gnuplot -p data.plt')
         else
             print *, 'Alpha no puede ser 0'
         endif
