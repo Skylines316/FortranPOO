@@ -1,4 +1,4 @@
-module class_funciones
+module class_funcionesBH
     type blackHole
         real :: alpha, eta, nu
     end type blackHole

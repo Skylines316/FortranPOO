@@ -1,5 +1,5 @@
-module NewtonRaphson
-use class_funciones
+module auxiliarFunctions
+use class_funcionesBH
 
 contains
     function solveF(xIni, bh, eps, epsF, limLoop) result(xFin)
@@ -30,6 +30,20 @@ contains
         print *, 'El valor del error es de: ', error
 
     end function solveF
+
+    ! function linspace(xIni, xFin, points) result (x)
+    !     implicit none
+    !     integer :: points, i, step
+    !     real :: xFin, xIni
+    !     real , dimension(points) :: x
+    !     step = (xFin-xIni)/points
+    !     i=1
+    !     do while (i <= points)
+    !         x(i) = xIni
+    !         xIni = xIni + step
+    !         i = i + 1
+    !     enddo
+    ! end function
 
 
 end module

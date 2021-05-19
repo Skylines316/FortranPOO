@@ -1,6 +1,6 @@
 module class_blackHole
-    use class_funciones
-    use NewtonRaphson
+    use class_funcionesBH
+    use auxiliarFunctions
     implicit none
     real, parameter, private :: c = 6.407e4
     real, parameter, private :: G = 39.309
