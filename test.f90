@@ -3,6 +3,7 @@ program hairyBH
     ! use auxiliarFunctions
     use particula_time_like
     implicit none
+    real , dimension(2) :: r_init
     real :: M, x_horizonte, r_horizonte
     type ( blackHole ) :: miBH
     type ( timeLike ) :: miTL
@@ -11,6 +12,8 @@ program hairyBH
     miTL = timeLike (-0.025, 2.6e-6)
     call potencial(miBH, miTL)
     M = masa (miBH)
+    r_init = cond_init(0.4, miBH, miTL)
+    print *, 'las condiciones iniciales son', r_init
     write(*,*) 'La masa del BH es', M
     call show_consts(miBH)
     x_horizonte = horizonte_hairy(miBH)
