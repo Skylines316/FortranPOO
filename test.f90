@@ -14,6 +14,7 @@ program hairyBH
     M = masa (miBH)
     r_init = cond_init(0.4, miBH, miTL)
     print *, 'las condiciones iniciales son', r_init
+    call orbitasTL(r_init, miBH, miTL)
     write(*,*) 'La masa del BH es', M
     call show_consts(miBH)
     x_horizonte = horizonte_hairy(miBH)
