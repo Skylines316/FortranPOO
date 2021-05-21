@@ -84,6 +84,54 @@ contains
         call system ('gnuplot -p dataTL.plt')
     end subroutine orbitasTL
 
+    subroutine orbitasTLanim(r_init, cuadros, bh, tl)
+        implicit none
+        character(20) :: filename
+        character(50) :: comand
+        real :: h, theta, x_n, y_n, r_n, k_0, l_0, k_1, l_1, k_2, l_2, k_3, l_3, x_n1, y_n1
+        integer :: cuadros, j, i, s
+        real ,dimension(2) :: r_init
+        type ( blackHole ), intent(in) :: bh
+        type ( timeLike ), intent(in) :: tl
+        do j=1,cuadros
+            s=10000
+            h=j*8.5*pi/(s*cuadros)
+            theta = 0.0
+            x_n = r_init(1)
+            y_n = r_init(2)
+            write(filename,'(a,i0,a)') './temp/data',j,'.dat'
+            open(1,file=filename)
+            do i=1,s
+                r_n = omega(x_n,bh)**0.5
+                write (1,*) theta, r_n
+
+                k_0 = h*y_n
+                l_0 = h*(-funH(x_n,bh,tl))
+
+                k_1 = h*(y_n+l_0/2)
+                l_1 = h*(-funH(x_n+0.5*k_0,bh,tl))
+
+                k_2 = h*(y_n+l_1/2)
+                l_2 = h*(-funH(x_n+0.5*k_1,bh,tl))
+
+                k_3 = h*(y_n+l_2)
+                l_3 = h*(-funH(x_n+k_2,bh,tl))
+
+                y_n1 = y_n+(l_0+2*l_1+2*l_2+l_3)/6
+                x_n1 = x_n+(k_0+2*k_1+2*k_2+k_3)/6
+
+                y_n = y_n1
+                x_n = x_n1
+
+                theta = theta + h
+            enddo
+            close(1)
+            write(comand, '(a,i0,a)') 'gnuplot -e "num=',j,'" anim.plt'
+            call system (comand)
+        enddo
+
+    end subroutine
+
     ! !buscar una manera mas eficiente de hallar los maximos y minos de un de esa funcion
     ! function maximo(bh,tl) result(r)
     !     implicit none

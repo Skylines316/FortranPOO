@@ -38,5 +38,6 @@
 ## Bash 
 #*.sh
 
-##images
+##images and data
+*.dat
 *.png
