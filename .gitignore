@@ -41,3 +41,7 @@
 ##images and data
 *.dat
 *.png
+
+##videos
+*.mkv
+*.mp4

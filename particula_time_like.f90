@@ -95,7 +95,7 @@ contains
         type ( timeLike ), intent(in) :: tl
         do j=1,cuadros
             s=10000
-            h=j*8.5*pi/(s*cuadros)
+            h=j*50*pi/(s*cuadros)
             theta = 0.0
             x_n = r_init(1)
             y_n = r_init(2)
@@ -126,7 +126,9 @@ contains
                 theta = theta + h
             enddo
             close(1)
-            write(comand, '(a,i0,a)') 'gnuplot -e "num=',j,'" anim.plt'
+            ! write (comand, '(a,i0.4,a)') 'echo "',j,'"'
+            ! call system (comand)
+            write(comand, '(a,i0.4,a)') 'gnuplot -e "num=',j,'" anim.plt'
             call system (comand)
         enddo
 
