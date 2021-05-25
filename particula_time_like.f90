@@ -99,7 +99,7 @@ contains
             theta = 0.0
             x_n = r_init(1)
             y_n = r_init(2)
-            write(filename,'(a,i0,a)') './temp/data',j,'.dat'
+            write(filename,'(a,i0.4,a)') './temp/data',j,'.dat'
             open(1,file=filename)
             do i=1,s
                 r_n = omega(x_n,bh)**0.5
@@ -128,7 +128,7 @@ contains
             close(1)
             ! write (comand, '(a,i0.4,a)') 'echo "',j,'"'
             ! call system (comand)
-            write(comand, '(a,i0.4,a)') 'gnuplot -e "num=',j,'" anim.plt'
+            write(comand, '(a,i0,a)') 'gnuplot -e "prenum=',j,'" anim.plt'
             call system (comand)
         enddo
 

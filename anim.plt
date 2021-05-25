@@ -2,6 +2,8 @@ set rrange [0:3]
 set grid polar
 # unset tics
 # unset raxis
+# c=sprintf("%05d", b)
+num=sprintf("%04d", prenum)
 set term png
 set nokey
 set title "Orbita"
