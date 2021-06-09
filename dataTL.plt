@@ -1,10 +1,10 @@
 set xlabel "theta"
-set xrange [-3:3]
-set yrange [-3:3]
+set rrange [0:1.5]
+set grid polar
 set ylabel "r"
 set term png
 set output "./figures/orbitas.png"
-m = "./data/datosoTL.dat"
+m = "./data/datosNull.dat"
 set nokey
 set grid polar
 set title "Orbita"

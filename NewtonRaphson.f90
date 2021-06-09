@@ -51,7 +51,7 @@ contains
             iter = iter + 1
         end do
 
-        if (iter > limLoop) then
+        if (iter >= limLoop) then
             print *, 'No se encontro la solución convergente'
         endif
 

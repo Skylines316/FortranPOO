@@ -41,48 +41,47 @@ contains
         endif
     end subroutine potencialNull
 
-    ! subroutine orbitasTL(r_init, bh, tl)
-    !     implicit none
-    !     character(20) :: filename
-    !     integer :: s, i
-    !     real :: h, theta, x_n, y_n, r_n, k_0, l_0, k_1, l_1, k_2, l_2, k_3, l_3, x_n1, y_n1
-    !     real ,dimension(2) :: r_init
-    !     type ( blackHole ), intent(in) :: bh
-    !     type ( timeLike ), intent(in) :: tl
-    !     s=10000
-    !     h=8.5*pi/s
-    !     theta = 0.0
-    !     x_n = r_init(1)
-    !     y_n = r_init(2)
-    !     write(filename,'(a,a)') './data/datosoTL','.dat'
-    !     open(1,file=filename)
-    !     do i=1,s
-    !         r_n = omega(x_n,bh)**0.5
-    !         write (1,*) theta, r_n
+    subroutine orbitasNull(r_init, bh)
+        implicit none
+        character(20) :: filename
+        integer :: s, i
+        real :: h, theta, x_n, y_n, r_n, k_0, l_0, k_1, l_1, k_2, l_2, k_3, l_3, x_n1, y_n1
+        real ,dimension(3) :: r_init
+        type ( blackHole ), intent(in) :: bh
+        s=10000
+        h=1.2*pi/s
+        theta = r_init(3)
+        x_n = r_init(1)
+        y_n = r_init(2)
+        write(filename,'(a,a)') './data/datosNull','.dat'
+        open(1,file=filename)
+        do i=1,s
+            r_n = omega(x_n,bh)**0.5
+            write (1,*) theta, r_n
 
-    !         k_0 = h*y_n
-    !         l_0 = h*(-funH(x_n,bh,tl))
+            k_0 = h*y_n
+            l_0 = h*(-funHNull(x_n,bh))
 
-    !         k_1 = h*(y_n+l_0/2)
-    !         l_1 = h*(-funH(x_n+0.5*k_0,bh,tl))
+            k_1 = h*(y_n+l_0/2)
+            l_1 = h*(-funHNull(x_n+0.5*k_0,bh))
 
-    !         k_2 = h*(y_n+l_1/2)
-    !         l_2 = h*(-funH(x_n+0.5*k_1,bh,tl))
+            k_2 = h*(y_n+l_1/2)
+            l_2 = h*(-funHNull(x_n+0.5*k_1,bh))
 
-    !         k_3 = h*(y_n+l_2)
-    !         l_3 = h*(-funH(x_n+k_2,bh,tl))
+            k_3 = h*(y_n+l_2)
+            l_3 = h*(-funHNull(x_n+k_2,bh))
 
-    !         y_n1 = y_n+(l_0+2*l_1+2*l_2+l_3)/6
-    !         x_n1 = x_n+(k_0+2*k_1+2*k_2+k_3)/6
+            y_n1 = y_n+(l_0+2*l_1+2*l_2+l_3)/6
+            x_n1 = x_n+(k_0+2*k_1+2*k_2+k_3)/6
 
-    !         y_n = y_n1
-    !         x_n = x_n1
+            y_n = y_n1
+            x_n = x_n1
 
-    !         theta = theta + h
-    !     enddo
-    !     close(1)
-    !     call system ('gnuplot -p dataTL.plt')
-    ! end subroutine orbitasTL
+            theta = theta + h
+        enddo
+        close(1)
+        call system ('gnuplot -p dataTL.plt')
+    end subroutine orbitasNull
 
     ! subroutine orbitasTLanim(r_init, cuadros, bh, tl)
     !     implicit none
@@ -174,14 +173,15 @@ contains
         integer :: limLoop
         type ( blackHole ), intent(in) :: bh
         type ( null ), intent(in) :: nl
-        r = SQRT(r_x**2+nl%b**2)
+        r = (r_x**2+nl%b**2)**0.5
+        print *, r
         theta = ATAN(nl%b/r_x)
-        xIni = 0.8
+        xIni = 0.94
         eps = 1e-9
         epsF = 1e-9
-        limLoop = 20
+        limLoop = 30
         x_radio = solveOmega_r(xIni, r, bh, eps, epsF, limLoop)
-        x_prima = SQRT((1/nl%b**2-f(x_radio, bh))/(bh%eta**2))
+        x_prima = -SQRT((1/nl%b**2-f(x_radio, bh))/(bh%eta**2))
         r_init=(/x_radio, x_prima, theta/)
         ! if (bh%alpha > 0) then
         !     xIni= 0.83
