@@ -21,16 +21,17 @@ contains
             i=1.0
             do while (i <100)
                 U = U_potencial(i,bh,tl)
-                r = omega(i,bh)
+                r = omega(i,bh)**(0.5)
                 write(1,*) r, U
                 i=i+step
             enddo
             close(1)
             call system ('gnuplot -p data.plt')
         elseif (bh%alpha > 0) then
+            i=0
             do while(i < 1)
                 U = U_potencial(i,bh,tl)
-                r = omega(i,bh)
+                r = omega(i,bh)**(0.5)
                 write(1,*) r,U
                 i=i+step
             enddo
