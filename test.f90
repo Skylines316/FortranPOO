@@ -4,7 +4,9 @@ program hairyBH
     ! use particula_time_like
     use particula_null
     implicit none
+    real, dimension(21) :: b
     real , dimension(3) :: r_init
+    integer :: i
     real :: M, x_horizonte, r_horizonte
     type ( blackHole ) :: miBH
     ! type ( timeLike ) :: miTL
@@ -18,7 +20,11 @@ program hairyBH
     ! r_init = cond_init(0.4, miBH, miTL)
     r_init = cond_initNull(1.5, miBH, miNull)
     print *, 'las condiciones iniciales son', r_init
-    call orbitasNull(r_init, miBH)
+    do i = 1,21          
+      b(i) = (i-11)*0.05     
+    end do 
+    print *, 'El array b es', b
+    call orbitasNullMult(b, miBH)
     ! call orbitasTLanim(r_init, 1000, miBH, miTL)
     ! write(*,*) 'La masa del BH es', M
     ! call show_consts(miBH)

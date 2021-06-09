@@ -41,19 +41,20 @@ contains
         endif
     end subroutine potencialNull
 
-    subroutine orbitasNull(r_init, bh)
+    subroutine orbitasNull(r_init, bh,b)
         implicit none
-        character(20) :: filename
-        integer :: s, i
-        real :: h, theta, x_n, y_n, r_n, k_0, l_0, k_1, l_1, k_2, l_2, k_3, l_3, x_n1, y_n1
+        character(30) :: filename
+        integer :: s, i, b
+        real :: h, endtheta, theta, x_n, y_n, r_n, k_0, l_0, k_1, l_1, k_2, l_2, k_3, l_3, x_n1, y_n1
         real ,dimension(3) :: r_init
         type ( blackHole ), intent(in) :: bh
         s=10000
-        h=1.2*pi/s
+        endtheta =1*pi
+        h=endtheta/s
         theta = r_init(3)
         x_n = r_init(1)
         y_n = r_init(2)
-        write(filename,'(a,a)') './data/datosNull','.dat'
+        write(filename,'(a,i0.2,a)') './data/datosNull',b,'.dat'
         open(1,file=filename)
         do i=1,s
             r_n = omega(x_n,bh)**0.5
@@ -76,26 +77,48 @@ contains
 
             y_n = y_n1
             x_n = x_n1
+            if (ABS(theta) > endtheta) then
+                exit
+            endif
 
-            theta = theta + h
+            if (theta < 0) then
+                theta = theta -h
+            else
+                theta = theta + h
+            endif
         enddo
         close(1)
-        call system ('gnuplot -p dataTL.plt')
+        ! call system ('gnuplot -p dataTL.plt')
     end subroutine orbitasNull
 
-    ! subroutine orbitasTLanim(r_init, cuadros, bh, tl)
+    subroutine orbitasNullMult(b, bh)
+        implicit none
+        real :: args
+        real, dimension(21) :: b
+        real, dimension(3) :: r_init
+        integer :: i
+        type ( blackHole ), intent(in) :: bh
+        type ( null ) :: nl
+        do i=1,21
+            nl = null (b(i))
+            r_init = cond_initNull(1.5, bh, nl)
+            call orbitasNull(r_init, bh, i)
+        enddo
+        end subroutine orbitasNullMult
+
+    ! subroutine orbitasNullmult(r_init, cuadros, bh)
     !     implicit none
     !     character(20) :: filename
     !     character(50) :: comand
     !     real :: h, theta, x_n, y_n, r_n, k_0, l_0, k_1, l_1, k_2, l_2, k_3, l_3, x_n1, y_n1
     !     integer :: cuadros, j, i, s
-    !     real ,dimension(2) :: r_init
+    !     real ,dimension(3) :: r_init
     !     type ( blackHole ), intent(in) :: bh
     !     type ( timeLike ), intent(in) :: tl
     !     do j=1,cuadros
     !         s=10000
     !         h=j*50*pi/(s*cuadros)
-    !         theta = 0.0
+    !         theta = r_init(3)
     !         x_n = r_init(1)
     !         y_n = r_init(2)
     !         write(filename,'(a,i0.4,a)') './temp/data',j,'.dat'
@@ -105,16 +128,16 @@ contains
     !             write (1,*) theta, r_n
 
     !             k_0 = h*y_n
-    !             l_0 = h*(-funH(x_n,bh,tl))
+    !             l_0 = h*(-funHNull(x_n,bh,tl))
 
     !             k_1 = h*(y_n+l_0/2)
-    !             l_1 = h*(-funH(x_n+0.5*k_0,bh,tl))
+    !             l_1 = h*(-funHNull(x_n+0.5*k_0,bh,tl))
 
     !             k_2 = h*(y_n+l_1/2)
-    !             l_2 = h*(-funH(x_n+0.5*k_1,bh,tl))
+    !             l_2 = h*(-funHNull(x_n+0.5*k_1,bh,tl))
 
     !             k_3 = h*(y_n+l_2)
-    !             l_3 = h*(-funH(x_n+k_2,bh,tl))
+    !             l_3 = h*(-funHNull(x_n+k_2,bh,tl))
 
     !             y_n1 = y_n+(l_0+2*l_1+2*l_2+l_3)/6
     !             x_n1 = x_n+(k_0+2*k_1+2*k_2+k_3)/6
@@ -127,10 +150,9 @@ contains
     !         close(1)
     !         ! write (comand, '(a,i0.4,a)') 'echo "',j,'"'
     !         ! call system (comand)
-    !         write(comand, '(a,i0,a)') 'gnuplot -e "prenum=',j,'" anim.plt'
-    !         call system (comand)
+    !         ! write(comand, '(a,i0,a)') 'gnuplot -e "prenum=',j,'" anim.plt'
+    !         ! call system (comand)
     !     enddo
-
     ! end subroutine
 
     ! !buscar una manera mas eficiente de hallar los maximos y minos de un de esa funcion
@@ -183,25 +205,6 @@ contains
         x_radio = solveOmega_r(xIni, r, bh, eps, epsF, limLoop)
         x_prima = -SQRT((1/nl%b**2-f(x_radio, bh))/(bh%eta**2))
         r_init=(/x_radio, x_prima, theta/)
-        ! if (bh%alpha > 0) then
-        !     xIni= 0.83
-        !     eps = 1e-9
-        !     epsF = 1e-9
-        !     limLoop = 20
-        !     x_radio = solveOmega_r(xIni, r, bh, eps, epsF, limLoop)
-        !     x_prima = ((tl%energia-U_potencial(x_radio, bh, tl))/(bh%eta**2*tl%J**2*c**2))**0.5
-        !     r_init =(/x_radio, x_prima/)
-        ! elseif (bh%alpha < 0) then
-        !     xIni= 1.22
-        !     eps = 1e-9
-        !     epsF = 1e-9
-        !     limLoop = 20
-        !     x_radio = solveOmega_r(xIni, r, bh, eps, epsF, limLoop)
-        !     x_prima = ((tl%energia-U_potencial(x_radio, bh, tl))/(bh%eta**2*tl%J**2*c**2))**0.5
-        !     r_init =(/x_radio, x_prima/)
-        ! else
-        !     print *, 'alpha no puede ser 0'
-        ! endif
     end function cond_initNull
 
 
